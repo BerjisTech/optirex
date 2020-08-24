@@ -104,7 +104,7 @@
         <ul class="list-inline links-list pull-right">
 
             <li>
-                <a href="<?php echo site_url('home'); ?>" target="_blank">
+                <a href="https://optirexeyecare@gmail.com" target="_blank">
                     <i class="fa fa-globe"></i> &nbsp;<?php echo get_phrase('website');?>
                 </a>
             </li>
