@@ -30,11 +30,11 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group hidden">
                         <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('password'); ?></label>
 
                         <div class="col-sm-7">
-                            <input type="password" name="password" class="form-control" id="field-1" required>
+                            <input type="password" name="password" class="form-control" id="field-1" value="patient" required>
                         </div>
                     </div>
 
@@ -42,7 +42,7 @@
                         <label for="field-ta" class="col-sm-3 control-label"><?php echo get_phrase('address'); ?></label>
 
                         <div class="col-sm-7">
-                            <textarea rows="5" name="address" class="form-control" id="field-ta"></textarea>
+                            <textarea name="address" class="form-control" id="field-ta" rows="5"></textarea>
                         </div>
                     </div>
 
@@ -55,11 +55,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="field-ta" class="col-sm-3 control-label"><?php echo get_phrase('sex'); ?></label>
+                        <label for="field-ta" class="col-sm-3 control-label"><?php echo get_phrase('gender'); ?></label>
 
                         <div class="col-sm-7">
                             <select name="sex" class="form-control">
-                                <option value=""><?php echo get_phrase('select_sex'); ?></option>
+                                <option value=""><?php echo get_phrase('select_gender'); ?></option>
                                 <option value="male"><?php echo get_phrase('male'); ?></option>
                                 <option value="female"><?php echo get_phrase('female'); ?></option>
                             </select>
@@ -70,15 +70,16 @@
                         <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('birth_date'); ?></label>
 
                         <div class="col-sm-7">
-                            <input type="text" name="birth_date" class="form-control datepicker" id="field-1" >
+                            <input type="text" name="birth_date" class="form-control datepicker birth_date" id="field-1" >
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('age'); ?></label>
+                        <div id="exact_age"></div>
 
                         <div class="col-sm-7">
-                            <input type="number" name="age" class="form-control" id="field-1" >
+                            <input type="number" name="age" class="form-control age" id="field-1" disabled >
                         </div>
                     </div>
 
@@ -100,7 +101,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group hidden">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('image'); ?></label>
 
                         <div class="col-sm-7">
@@ -125,8 +126,7 @@
 
                     <div class="col-sm-3 control-label col-sm-offset-2">
                         <button type="submit" class="btn btn-success">
-                            <i class="fa fa-check"></i> &nbsp;
-                            <?php echo get_phrase('save');?>
+                            <i class="fa fa-check"></i> <?php echo get_phrase('save');?>
                         </button>
                     </div>
                 </form>
@@ -137,3 +137,19 @@
 
     </div>
 </div>
+<script>
+$(document).ready(function(){
+    $(".birth_date").change(function(){
+        var Bdate = $('.birth_date').val();
+        var Bday = + new Date(Bdate);
+        var year_age = ((Date.now() - Bday) / (31557600000))
+        
+        if (isNaN(year_age)) {
+            $("#exact_age").text("Invalid birthday - Please try again!");
+        }
+        else {
+            $(".age").val(Number(year_age).toFixed(0));
+        }
+    });
+});
+</script>
