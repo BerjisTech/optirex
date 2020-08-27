@@ -185,4 +185,111 @@ class Pharmacist extends CI_Controller
             'medicine_id' => $medicine_id
         ))->row()->price;
     }
+
+    //STOCKS
+    function stock_category($task = "", $stock_category_id = "")
+    {
+        if ($this->session->userdata('pharmacist_login') != 1) {
+            $this->session->set_userdata('last_page', current_url());
+            redirect(site_url(), 'refresh');
+        }
+        
+        if ($task == "create") {
+            $this->crud_model->save_stock_category_info();
+            $this->session->set_flashdata('message', get_phrase('stock_category_info_saved_successfuly'));
+            redirect(site_url('pharmacist/stock_category'), 'refresh');
+        }
+        
+        if ($task == "update") {
+            $this->crud_model->update_stock_category_info($stock_category_id);
+            $this->session->set_flashdata('message', get_phrase('stock_category_info_updated_successfuly'));
+            redirect(site_url('pharmacist/stock_category'), 'refresh');
+        }
+        
+        if ($task == "delete") {
+            $this->crud_model->delete_stock_category_info($stock_category_id);
+            redirect(site_url('pharmacist/stock_category'), 'refresh');
+        }
+        
+        $data['stock_category_info'] = $this->crud_model->select_stock_category_info();
+        $data['page_name']              = 'manage_stock_category';
+        $data['page_title']             = get_phrase('stock_category');
+        $this->load->view('backend/index', $data);
+    }
+    
+    function stock($task = "", $stock_id = "")
+    {
+        if ($this->session->userdata('pharmacist_login') != 1) {
+            $this->session->set_userdata('last_page', current_url());
+            redirect(site_url(), 'refresh');
+        }
+        
+        if ($task == "create") {
+            $this->crud_model->save_stock_info();
+            $this->session->set_flashdata('message', get_phrase('stock_info_saved_successfuly'));
+            redirect(site_url('pharmacist/stock'), 'refresh');
+        }
+        
+        if ($task == "update") {
+            $this->crud_model->update_stock_info($stock_id);
+            $this->session->set_flashdata('message', get_phrase('stock_info_updated_successfuly'));
+            redirect(site_url('pharmacist/stock'), 'refresh');
+        }
+        
+        if ($task == "delete") {
+            $this->crud_model->delete_stock_info($stock_id);
+            redirect(site_url('pharmacist/stock'), 'refresh');
+        }
+        
+        $data['stock_info'] = $this->crud_model->select_stock_info();
+        $data['page_name']     = 'manage_stock';
+        $data['page_title']    = get_phrase('stock');
+        $this->load->view('backend/index', $data);
+    }
+
+    function stock_sale($task = "", $param2 = "")
+    {
+        if ($this->session->userdata('pharmacist_login') != 1) {
+            $this->session->set_userdata('last_page', current_url());
+            redirect(site_url(), 'refresh');
+        }
+        
+        if ($task == "create") {
+            $this->crud_model->create_stock_sale();
+            $this->session->set_flashdata('message', get_phrase('data_added_successfully'));
+            redirect(site_url('pharmacist/stock_sale'), 'refresh');
+        }
+        
+        $data['page_name']  = 'stock_sale';
+        $data['page_title'] = get_phrase('stock_sales');
+        $this->load->view('backend/index', $data);
+    }
+    
+    function create_stock_sale($task = "", $param2 = "")
+    {
+        if ($this->session->userdata('pharmacist_login') != 1) {
+            $this->session->set_userdata('last_page', current_url());
+            redirect(site_url(), 'refresh');
+        }
+        
+        $data['page_name']  = 'stock_sale_add';
+        $data['page_title'] = get_phrase('add_stock_sale');
+        $this->load->view('backend/index', $data);
+    }
+    
+    function get_available_stock_quantity($stock_id = '')
+    {
+        $stock           = $this->db->get_where('stock', array(
+            'stock_id' => $stock_id
+        ))->row();
+        $available_quantity = $stock->total_quantity - $stock->sold_quantity;
+        echo $available_quantity;
+    }
+    
+    function get_stock_price($stock_id = '')
+    {
+        echo $this->db->get_where('stock', array(
+            'stock_id' => $stock_id
+        ))->row()->price;
+    }
 }

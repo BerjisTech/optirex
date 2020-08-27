@@ -92,6 +92,34 @@
             </ul>
         </li>
 
+        <li class="<?php if ($page_name == 'manage_stock_category') echo 'active'; ?> ">
+            <a href="<?php echo site_url('pharmacist/stock_category'); ?>">
+                <i class="fa fa-edit"></i>
+                <span><?php echo get_phrase('stock_category'); ?></span>
+            </a>
+        </li>
+        
+        <li class="<?php if ($page_name == 'manage_stock' || $page_name == 'stock_sale' || $page_name == 'stock_sale_add') echo 'opened active'; ?> ">
+            <a href="#">
+                <i class="fa fa-medkit"></i>
+                <span><?php echo get_phrase('stock'); ?></span>
+            </a>
+            <ul>
+                <li class="<?php if ($page_name == 'manage_stock') echo 'active'; ?> ">
+                    <a href="<?php echo site_url('pharmacist/stock'); ?>">
+                        <i class="entypo-dot"></i>
+                        <span><?php echo get_phrase('manage_stocks'); ?></span>
+                    </a>
+                </li>
+                <li class="<?php if ($page_name == 'stock_sale' || $page_name == 'stock_sale_add') echo 'active'; ?> ">
+                    <a href="<?php echo site_url('pharmacist/stock_sale'); ?>">
+                        <i class="entypo-dot"></i>
+                        <span><?php echo get_phrase('stock_sales'); ?></span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <!-- PAYROLL -->
         <li class="<?php if ($page_name == 'payroll_list') echo 'active'; ?> ">
             <a href="<?php echo site_url('pharmacist/payroll_list'); ?>">

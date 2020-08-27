@@ -87,21 +87,21 @@
             </a>
         </li>
 
-        <li class="hidden <?php if ($page_name == 'manage_nurse') echo 'active'; ?> ">
+        <li class="<?php if ($page_name == 'manage_nurse') echo 'active'; ?> ">
             <a href="<?php echo site_url('admin/nurse');?>">
                 <i class="fa fa-plus-square"></i>
                 <span><?php echo get_phrase('nurse'); ?></span>
             </a>
         </li>
 
-        <li class="hidden <?php if ($page_name == 'manage_pharmacist') echo 'active'; ?> ">
+        <li class="<?php if ($page_name == 'manage_pharmacist') echo 'active'; ?> ">
             <a href="<?php echo site_url('admin/pharmacist');?>">
                 <i class="fa fa-medkit"></i>
                 <span><?php echo get_phrase('pharmacist'); ?></span>
             </a>
         </li>
 
-        <li class="hidden <?php if ($page_name == 'manage_laboratorist') echo 'active'; ?> ">
+        <li class="<?php if ($page_name == 'manage_laboratorist') echo 'active'; ?> ">
             <a href="<?php echo site_url('admin/laboratorist');?>">
                 <i class="fa fa-user"></i>
                 <span><?php echo get_phrase('laboratorist'); ?></span>

@@ -398,6 +398,7 @@ class Crud_model extends CI_Model {
         $data['birth_date']     = strtotime($this->input->post('birth_date'));
         $data['age']            = $this->input->post('age');
         $data['blood_group'] 	= $this->input->post('blood_group');
+        $data['account_opening_timestamp'] = time();
         $validation = email_validation_on_create($data['email']);
         if ($validation == 1) {
           $returned_array = null_checking($data);
@@ -433,6 +434,7 @@ class Crud_model extends CI_Model {
         $data['birth_date']     = strtotime($this->input->post('birth_date'));
         $data['age']            = $this->input->post('age');
         $data['blood_group'] 	= $this->input->post('blood_group');
+        $data['account_opening_timestamp'] = time();
         $validation = email_validation_on_edit($data['email'], $patient_id, 'patient');
         if ($validation == 1) {
           $returned_array = null_checking($data);
@@ -1443,5 +1445,99 @@ class Crud_model extends CI_Model {
       move_uploaded_file($_FILES['pathology_report']['tmp_name'], 'uploads/pathology_reports/'. $modified_file_name);
       $data['pathology_report'] = $modified_file_name;
       $this->db->insert('pathology_report', $data);
+    }
+
+    //STOCKS
+    function save_stock_category_info()
+    {
+        $data['name'] 		= $this->input->post('name');
+        $data['description']    = $this->input->post('description');
+        $returned_array = null_checking($data);
+        $this->db->insert('stock_category',$returned_array);
+    }
+
+    function select_stock_category_info()
+    {
+        return $this->db->get('stock_category')->result_array();
+    }
+
+    function update_stock_category_info($stock_category_id)
+    {
+        $data['name'] 		= $this->input->post('name');
+        $data['description'] 	= $this->input->post('description');
+        $returned_array = null_checking($data);
+        $this->db->where('stock_category_id',$stock_category_id);
+        $this->db->update('stock_category',$returned_array);
+    }
+
+    function delete_stock_category_info($stock_category_id)
+    {
+        $this->db->where('stock_category_id',$stock_category_id);
+        $this->db->delete('stock_category');
+    }
+
+    function save_stock_info()
+    {
+        $data['name']                   = $this->input->post('name');
+        $data['stock_category_id']   = $this->input->post('stock_category_id');
+        $data['description']            = $this->input->post('description');
+        $data['price']                  = $this->input->post('price');
+        $data['manufacturing_company']  = $this->input->post('manufacturing_company');
+        $data['total_quantity']         = $this->input->post('total_quantity');
+        $data['sold_quantity']          = 0;
+        $returned_array = null_checking($data);
+        $this->db->insert('stock',$returned_array);
+    }
+
+    function select_stock_info()
+    {
+        return $this->db->get('stock')->result_array();
+    }
+
+    function update_stock_info($stock_id)
+    {
+        $data['name']                   = $this->input->post('name');
+        $data['stock_category_id']   = $this->input->post('stock_category_id');
+        $data['description']            = $this->input->post('description');
+        $data['price']                  = $this->input->post('price');
+        $data['manufacturing_company']  = $this->input->post('manufacturing_company');
+        $data['total_quantity']         = $this->input->post('total_quantity');
+        $returned_array = null_checking($data);
+        $this->db->where('stock_id',$stock_id);
+        $this->db->update('stock',$returned_array);
+    }
+
+    function delete_stock_info($stock_id)
+    {
+        $this->db->where('stock_id',$stock_id);
+        $this->db->delete('stock');
+    }
+    //CREATE stock SALE
+    function create_stock_sale() {
+        $data['patient_id']     = $this->input->post('patient_id');
+        $data['total_amount']   = $this->input->post('total_amount');
+        $stocks              = array();
+        $stock_ids           = $this->input->post('stock_id');
+        $stock_quantities    = $this->input->post('stock_quantity');
+        $number_of_entries      = sizeof($stock_ids);
+
+        for($i = 0; $i < $number_of_entries; $i++)
+        {
+            if($stock_ids[$i] != "" && $stock_quantities[$i] != "")
+            {
+                $new_entry = array('stock_id' => $stock_ids[$i], 'quantity' => $stock_quantities[$i]);
+                array_push($stocks, $new_entry);
+
+                // UPDATE stock INVENTORY
+                $sold_quantity = $this->db->get_where('stock', array('stock_id' => $stock_ids[$i]))->row()->sold_quantity;
+
+                $data2['sold_quantity'] = $sold_quantity + $stock_quantities[$i];
+
+                $this->db->update('stock', $data2, array('stock_id' => $stock_ids[$i]));
+            }
+        }
+        $data['stocks']     = json_encode($stocks);
+        $returned_array = null_checking($data);
+        $this->db->insert('stock_sale', $returned_array);
     }
 }

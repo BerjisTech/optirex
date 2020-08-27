@@ -1,4 +1,4 @@
-<a href="<?php echo site_url('pharmacist/create_medicine_sale'); ?>i"
+<a href="<?php echo site_url('pharmacist/create_medicine_sale'); ?>"
     class="btn btn-primary pull-right">
         <i class="fa fa-plus"></i> &nbsp;<?php echo get_phrase('add_medicine_sale'); ?>
 </a>
