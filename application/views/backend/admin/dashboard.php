@@ -135,6 +135,19 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     // Sparkline Charts
+    $('.pageviews').sparkline('html', {type: 'bar', height: '30px', barColor: '#ff6264'} );
+    $('.uniquevisitors').sparkline('html', {type: 'bar', height: '30px', barColor: '#00b19d'} );
+    $('.inlinebar').sparkline('html', {
+        type: 'bar',
+        barColor: '#ff6264'
+    });
+    $(".monthly-sales").sparkline([1, 2, 3, 5, 6, 7, 2, 3, 3, 4, 3, 5, 7, 2, 4, 3, 5, 4, 5, 6, 3, 2], {
+        type: 'bar',
+        barColor: '#485671',
+        height: '80px',
+        barWidth: 10,
+        barSpacing: 2
+    });
     $(".admissions").sparkline([1, 5, 6, 7, 10, 12, 16, 11, 9, 8.9, 8.7, 7, 8, 7, 6, 5.6, 5, 7, 5, 4, 5, 6, 7,
         8, 6, 7, 6, 3, 2
     ], {
@@ -228,6 +241,7 @@ jQuery(document).ready(function($) {
         xkey: 'y',
         ykeys: ['a', 'b'],
         labels: ['Proccured', 'Sales'],
+        lineColors: ['#ec3b83', '#00acd6'],
         redraw: true
     });
     line_chart_demo.parent().attr('style', '');
@@ -242,15 +256,15 @@ jQuery(document).ready(function($) {
                 value: getRandomInt(10, 50)
             },
             {
-                label: "In-Store Sales",
+                label: "Stock Sales",
                 value: getRandomInt(10, 50)
             },
             {
-                label: "Mail-Order Sales",
+                label: "Medicine Sales",
                 value: getRandomInt(10, 50)
             }
         ],
-        colors: ['#707f9b', '#455064', '#242d3c']
+        colors: ['#FF4E50', '#DB3739', '#A9282A']
     });
     donut_chart_demo.parent().attr('style', '');
 
@@ -298,7 +312,7 @@ jQuery(document).ready(function($) {
         xkey: 'y',
         ykeys: ['a', 'b'],
         labels: ['Proccured', 'Sales'],
-        lineColors: ['#303641', '#576277']
+        lineColors: ['#00acd6', '#ec3b83']
     });
     area_chart_demo.parent().attr('style', '');
 });
@@ -309,26 +323,26 @@ function getRandomInt(min, max) {
 </script>
 <div class="row">
     <div class="col-md-3 col-sm-6">
-        <div class="tile-stats tile-white stat-tile">
+        <div class="tile-stats tile-white stat-tile" style="box-shadow: 0 0 20px rgba(0,0,0,0.11);">
             <h3><?php echo number_format($this->db->get('patient')->num_rows()); ?> patient</h3>
             <p><?php echo $this->db->select('count(patient_id) as patient')->where('date_format(from_unixtime(account_opening_timestamp), "%m %Y") =', date('m Y'))->get('patient')->row()->patient; ?>
                 more admitted this month</p> <span class="admissions"></span>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="tile-stats tile-white stat-tile">
+        <div class="tile-stats tile-white stat-tile" style="box-shadow: 0 0 20px rgba(0,0,0,0.11);">
             <h3><?php echo number_format($this->db->get('patient')->num_rows()); ?></h3>
             <p>Total Medicine Sales</p> <span class="medicine-sales"></span>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="tile-stats tile-white stat-tile">
+        <div class="tile-stats tile-white stat-tile" style="box-shadow: 0 0 20px rgba(0,0,0,0.11);">
             <h3><?php echo number_format($this->db->get('patient')->num_rows()); ?></h3>
             <p>Total Stock Sales</p> <span class="stock-sales"></span>
         </div>
     </div>
     <div class="col-md-3 col-sm-6">
-        <div class="tile-stats tile-white stat-tile">
+        <div class="tile-stats tile-white stat-tile" style="box-shadow: 0 0 20px rgba(0,0,0,0.11);">
             <p>
                 <?php 
 								$stocks = $this->db->get('patient')->num_rows();
@@ -351,8 +365,8 @@ function getRandomInt(min, max) {
     <div class="col-sm-12">
         <div class="panel panel-primary" id="charts_env">
             <div class="panel-heading">
-                <div class="panel-title">Statistics</div>
-                <div class="panel-options">
+                <div class="panel-title" style="display: inline-table; color: #373e4a;">Statistics</div>
+                <div class="panel-options" style="display: inline-table; float: right; text-align: right;">
                     <ul class="nav nav-tabs">
                         <li class=""><a href="#area-chart" data-toggle="tab">Medicine</a></li>
                         <li class="active"><a href="#line-chart" data-toggle="tab">Stocks</a></li>
@@ -373,6 +387,24 @@ function getRandomInt(min, max) {
                     </div>
                 </div>
             </div>
+            <table class="table table-bordered table-responsive" style="background: #949494;">
+                <thead>
+                    <tr>
+                        <th width="50%" class="col-padding-1">
+                            <div class="pull-left">
+                                <div class="h4 no-margin">Total Procurement<br /> <small>(Medicine + Other Stocks)</small></div> <small>54,127</small>
+                            </div> 
+                            <span class="pull-right pageviews">2,3,5,4,3,4,5</span>
+                        </th>
+                        <th width="50%" class="col-padding-1">
+                            <div class="pull-left">
+                                <div class="h4 no-margin">Total Sales<br /> <small>(Medicine + Other Stocks)</small></div> <small>25,127</small>
+                            </div> 
+                            <span class="pull-right uniquevisitors">4,3,5,4,5,6,5</span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div> <br />
@@ -399,10 +431,11 @@ function getRandomInt(min, max) {
     <div class="col-sm-8">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <div class="panel-title">Latest admisions</div>
-                <div class="panel-options"> <a href="#sample-modal" data-toggle="modal"
-                        data-target="#sample-modal-dialog-1" class="bg"><i class="entypo-cog"></i></a> <a href="#"
-                        data-rel="collapse"><i class="entypo-down-open"></i></a> <a href="#" data-rel="reload"><i
+                <div class="panel-title" style="display: inline-table; color: #373e4a;">Latest Updated Profiles</div>
+                <div class="panel-options" style="display: inline-table; float: right;"> <a href="#sample-modal"
+                        data-toggle="modal" data-target="#sample-modal-dialog-1" class="bg"><i
+                            class="entypo-cog"></i></a> <a href="#" data-rel="collapse"><i
+                            class="entypo-down-open"></i></a> <a href="#" data-rel="reload"><i
                             class="entypo-arrows-ccw"></i></a> <a href="#" data-rel="close"><i
                             class="entypo-cancel"></i></a> </div>
             </div>

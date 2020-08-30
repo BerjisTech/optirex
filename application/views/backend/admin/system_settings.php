@@ -116,7 +116,7 @@
 
                         <div class="fileinput fileinput-new" data-provides="fileinput">
                             <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;" data-trigger="fileinput">
-                                <img src="<?php echo base_url();?>uploads/logo.png">
+                                <img src="<?php echo base_url();?><?php echo base_url(); ?>uploads/logo.png">
                             </div>
                             <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px"></div>
                             <div>

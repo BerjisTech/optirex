@@ -5,7 +5,7 @@ foreach ($edit_data as $row):
     <div id="invoice_print">
         <table width="100%" border="0">
             <tr>
-                <td width="50%"><img src="uploads/logo.png" style="max-height:80px;"></td>
+                <td width="50%"><img src="<?php echo base_url(); ?>uploads/logo.png" style="max-height:80px;"></td>
                 <td align="right">
                     <h4><?php echo get_phrase('invoice_number'); ?> : <?php echo $row['invoice_number']; ?></h4>
                     <h5><?php echo get_phrase('issue_date'); ?> : <?php echo $row['creation_timestamp']; ?></h5>
@@ -121,6 +121,10 @@ foreach ($edit_data as $row):
     </div>
     <br>
 
+    <a class="btn btn-info" href="<?php echo base_url(); ?>payments/pay/<?php echo $param2; ?>/<?php echo $grand_total; ?>">
+    <i class="fa fa-money"></i> &nbsp;
+    <?php echo get_phrase('pay_invoice');?>
+</a>
     <a onClick="PrintElem('#invoice_print')" class="btn btn-primary hidden-print">
         <i class="fa fa-print"></i> &nbsp;
         <?php echo get_phrase('print_invoice');?>
