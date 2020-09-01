@@ -135,31 +135,56 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     // Sparkline Charts
-    $('.pageviews').sparkline('html', {type: 'bar', height: '30px', barColor: '#ff6264'} );
-    $('.uniquevisitors').sparkline('html', {type: 'bar', height: '30px', barColor: '#00b19d'} );
+    $('.pageviews').sparkline('html', {
+        type: 'bar',
+        height: '30px',
+        barColor: '#ff6264'
+    });
+    $('.uniquevisitors').sparkline('html', {
+        type: 'bar',
+        height: '30px',
+        barColor: '#00b19d'
+    });
     $('.inlinebar').sparkline('html', {
         type: 'bar',
         barColor: '#ff6264'
     });
-    $(".monthly-sales").sparkline([1, 2, 3, 5, 6, 7, 2, 3, 3, 4, 3, 5, 7, 2, 4, 3, 5, 4, 5, 6, 3, 2], {
+    $(".monthly-admissions").sparkline([<?php
+		foreach($this->db->select('*, count(patient_id) as registrations, date_format(from_unixtime(account_opening_timestamp), "%Y %m %d") as year, date_format(from_unixtime(account_opening_timestamp), "%m") as month')->where('account_opening_timestamp >=', strtotime(date('d-m-y', time())))->group_by('month')->order_by('year', 'asc')->get('patient')->result_array() as $fetch){
+			echo ','.$fetch['registrations'];
+		}
+	?>], {
         type: 'bar',
         barColor: '#485671',
         height: '80px',
         barWidth: 10,
         barSpacing: 2
     });
-    $(".admissions").sparkline([1, 5, 6, 7, 10, 12, 16, 11, 9, 8.9, 8.7, 7, 8, 7, 6, 5.6, 5, 7, 5, 4, 5, 6, 7,
-        8, 6, 7, 6, 3, 2
-    ], {
-        type: 'bar',
-        barColor: '#ff4e50',
-        height: '55px',
-        width: '100%',
-        barWidth: 8,
-        barSpacing: 1
-    });
+    $(".admissions").sparkline([<?php
+		foreach($this->db->select('*, count(patient_id) as registrations, date_format(from_unixtime(account_opening_timestamp), "%Y %m %d") as year, date_format(from_unixtime(account_opening_timestamp), "%m") as month')->where('account_opening_timestamp >=', strtotime(date('d-m-y', time())))->group_by('month')->order_by('year', 'asc')->get('patient')->result_array() as $fetch){
+			echo ','.$fetch['registrations'];
+		}
+	?>], {
+		type: 'line',
+		width: '100%',
+		height: '55',
+		lineColor: '#e8b51b',
+		fillColor: '',
+		lineWidth: 2,
+		spotColor: '#344e86',
+		minSpotColor: '#344e86',
+		maxSpotColor: '#344e86',
+		highlightSpotColor: '#344e86',
+		highlightLineColor: '#30487b',
+		spotRadius: 2,
+		drawNormalOnTop: true
+	});
 
-    $(".medicine-sales").sparkline([1, 5, 5.5, 5.4, 5.8, 6, 8, 9, 13, 12, 10, 11.5, 9, 8, 5, 8, 9], {
+    $(".medicine-sales").sparkline([<?php
+		foreach($this->db->select('*, sum(amount) as sales, date_format(from_unixtime(timestamp), "%Y %m %d") as year, date_format(from_unixtime(timestamp), "%m") as month')->where('timestamp >=', strtotime(date('d-m-y', time())))->group_by('month')->order_by('year', 'asc')->get('payment')->result_array() as $fetch){
+			echo ','.$fetch['sales'];
+		}
+	?>], {
         type: 'line',
         width: '100%',
         height: '55',
@@ -175,14 +200,20 @@ jQuery(document).ready(function($) {
         drawNormalOnTop: true
     });
 
-    $(".pie-chart").sparkline([2.5, 3, 2], {
+    $(".pie-chart").sparkline([<?php echo $this->db->select('count(patient_id) as loan')->get('patient')->row()->loan; ?>, 
+								<?php echo $this->db->select('count(stock_id) as deposit')->get('stock')->row()->deposit; ?>, 
+								<?php echo $this->db->select('count(medicine_id) as shares')->get('medicine')->row()->shares; ?>], {
         type: 'pie',
         width: '95',
         height: '95',
         sliceColors: ['#ff4e50', '#db3739', '#a9282a']
     });
 
-    $(".stock-sales").sparkline([1, 5, 6, 7, 10, 12, 16, 11, 9, 8.9, 8.7, 7, 8, 7, 6, 5.6, 5, 7, 5], {
+    $(".stock-sales").sparkline([<?php
+		foreach($this->db->select('*, sum(amount) as sales, date_format(from_unixtime(timestamp), "%Y %m %d") as year, date_format(from_unixtime(timestamp), "%m") as month')->where('timestamp >=', strtotime(date('d-m-y', time())))->group_by('month')->order_by('year', 'asc')->get('payment')->result_array() as $fetch){
+			echo ','.$fetch['sales'];
+		}
+	?>], {
         type: 'line',
         width: '100%',
         height: '55',
@@ -253,15 +284,15 @@ jQuery(document).ready(function($) {
         element: 'donut-chart-demo',
         data: [{
                 label: "Patients",
-                value: getRandomInt(10, 50)
+                value: <?php echo $this->db->select('count(patient_id) as loan')->get('patient')->row()->loan; ?>
             },
             {
-                label: "Stock Sales",
-                value: getRandomInt(10, 50)
+                label: "Stock",
+                value: <?php echo $this->db->select('count(stock_id) as deposit')->get('stock')->row()->deposit; ?>
             },
             {
-                label: "Medicine Sales",
-                value: getRandomInt(10, 50)
+                label: "Medicine",
+                value: <?php echo $this->db->select('count(medicine_id) as shares')->get('medicine')->row()->shares; ?>
             }
         ],
         colors: ['#FF4E50', '#DB3739', '#A9282A']
@@ -345,12 +376,11 @@ function getRandomInt(min, max) {
         <div class="tile-stats tile-white stat-tile" style="box-shadow: 0 0 20px rgba(0,0,0,0.11);">
             <p>
                 <?php 
-								$stocks = $this->db->get('patient')->num_rows();
-								$medicine = $this->db->get('patient')->num_rows();
-								$patients = $this->db->get('patient')->num_rows();
-
-								$total = $stocks + $medicine + $patients;
-							?>
+					$stocks = $this->db->select('count(stock_id) as deposit')->get('stock')->row()->deposit;
+					$medicine = $this->db->select('count(medicine_id) as shares')->get('medicine')->row()->shares;
+					$patients = $this->db->select('count(patient_id) as loan')->get('patient')->row()->loan;
+					$total = $stocks + $medicine + $patients;
+				?>
                 <span style="color: #ec3b83;">Patients
                     <?php echo number_format((float)($patients*100)/$total, 1, '.', ''); ?>%</span> <br />
                 <span style="color: #00acd6;">Stock
@@ -392,14 +422,16 @@ function getRandomInt(min, max) {
                     <tr>
                         <th width="50%" class="col-padding-1">
                             <div class="pull-left">
-                                <div class="h4 no-margin">Total Procurement<br /> <small>(Medicine + Other Stocks)</small></div> <small>54,127</small>
-                            </div> 
+                                <div class="h4 no-margin">Total Procurement<br /> <small>(Medicine + Other
+                                        Stocks)</small></div> <small>54,127</small>
+                            </div>
                             <span class="pull-right pageviews">2,3,5,4,3,4,5</span>
                         </th>
                         <th width="50%" class="col-padding-1">
                             <div class="pull-left">
-                                <div class="h4 no-margin">Total Sales<br /> <small>(Medicine + Other Stocks)</small></div> <small>25,127</small>
-                            </div> 
+                                <div class="h4 no-margin">Total Sales<br /> <small>(Medicine + Other Stocks)</small>
+                                </div> <small>25,127</small>
+                            </div>
                             <span class="pull-right uniquevisitors">4,3,5,4,5,6,5</span>
                         </th>
                     </tr>
@@ -414,7 +446,7 @@ function getRandomInt(min, max) {
             <table class="table table-bordered table-responsive">
                 <thead>
                     <tr>
-                        <th class="padding-bottom-none text-center"> <br /> <br /> <span class="monthly-sales"></span>
+                        <th class="padding-bottom-none text-center"> <br /> <br /> <span class="monthly-admissions"></span>
                         </th>
                     </tr>
                 </thead>

@@ -105,7 +105,7 @@ foreach ($edit_data as $row):
     </table>
 
     <!-- payment history -->
-    <!--<h4><?php echo get_phrase('payment_history'); ?></h4>
+    <h4><?php echo get_phrase('payment_history'); ?></h4>
         <table class="table table-bordered" width="100%" border="1" style="border-collapse:collapse;">
             <thead>
                 <tr>
@@ -116,25 +116,26 @@ foreach ($edit_data as $row):
             </thead>
             <tbody>
                 <?php
-                $payment_history = $this->db->get_where('payment', array('invoice_number' => $row['invoice_number']))->result_array();
+                $payment_history = $this->db->get_where('payment', array('invoice_number' => $row['invoice_id']))->result_array();
                 foreach ($payment_history as $row2):
                     ?>
                     <tr>
-                        <td><?php echo $row2['timestamp']; ?></td>
+                        <td><?php echo date('d M, Y', $row2['timestamp']); ?></td>
                         <td><?php echo $row2['amount']; ?></td>
                         <td><?php echo $row2['payment_method']; ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tbody>
-        </table>-->
+        </table>
 </div>
 <br>
-
+<?php if($row['status'] == 'unpaid'): ?>
 <a class="btn btn-info" href="<?php echo base_url(); ?>payments/pay/<?php echo $param2; ?>/<?php echo $grand_total; ?>">
     <i class="fa fa-money"></i> &nbsp;
     <?php echo get_phrase('pay_invoice');?>
 </a>
+<?php endif; ?>
 <a onClick="PrintElem('#invoice_print')" class="btn btn-primary btn-icon icon-left hidden-print">
     Print Invoice
     <i class="entypo-doc-text"></i>

@@ -102,7 +102,7 @@ foreach ($edit_data as $row):
         <div class="tile-stats tile-white-red">
             <div class="icon"><i class="fa fa-money"></i></div>
             <div class="num">
-                MPesa
+                PAY
             </div>
             <?php if($this->session->flashdata('message')){ ?>
             <div id="flash_message" class='col-md-8 offset-md-2'>
@@ -110,7 +110,9 @@ foreach ($edit_data as $row):
                     <?=$this->session->flashdata('message');?></p>
             </div>
             <?php } ?>
-            <form action='<?=base_url("flutterwave/create_transaction");?>' method='post'>
+            <form action='<?=base_url("payments/create_transaction");?>' method='post'>
+                <input type="hidden" name="invoice_id" value="<?php echo $invoice_id; ?>" />
+                <input type="hidden" name="payment_type" value="medicine" />
                 <label>Customer Email <span class='text-danger'>*</span></label>
                 <input type='text' name='customer_email' class='form-control'
                     value="<?php echo $this->db->get_where('patient', array('patient_id' => $row['patient_id']))->row()->email; ?>"
